@@ -57,4 +57,4 @@ spec:
   tls:
   - hosts:
     - whoami.geeko.ninja  # Asegúrate de que este dominio coincida con tu configuración de DNS
-    secretName: demo/rancher-ingress-tls  # Especificar el namespace del secreto
+    secretName: rancher-ingress-tls  # Especificar el namespace del secreto
