@@ -1,0 +1,60 @@
+# clemenko
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whoami
+  labels:
+    app: whoami
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: whoami
+  template:
+    metadata:
+      labels:
+        app: whoami
+    spec:
+      containers:
+      - name: whoami
+        image: containous/whoami
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: whoami
+  name: whoami
+spec:
+  selector:
+    app: whoami
+  type: NodePort
+  ports:
+  - name: whoami
+    protocol: TCP
+    port: 8000
+    targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: whoami
+spec:
+  rules:
+  - host: whoami.geeko.ninja  # Cambié el dominio aquí
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: whoami
+            port:
+              number: 8000
+  tls:
+  - hosts:
+    - whoami.geeko.ninja  # Asegúrate de que este dominio coincida con tu configuración de DNS
+    secretName: rancher-ingress-tls  # Usar el secreto que contiene el certificado TLS
